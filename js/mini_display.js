@@ -261,10 +261,15 @@ SongDisplay.prototype = {
 		this.text(this.ctxLegend, this.displayAccessor.getDisplayLine1(), 20, 65);
 		this.text(this.ctxLegend, this.displayAccessor.getDisplayLine2(), 20, 80);
 		this.text(this.ctxLegend, this.displayAccessor.getDisplayLine3(), 20, 95);
-		
+			
 		// hack: make sure dumb Firefox knows that redraw is needed..
 		this.mozReflectLogo.style.visibility = "hidden";
 		this.mozReflectLogo.style.visibility = "visible";
+
+		document.getElementById('vgmTitle').innerHTML = this.displayAccessor.getDisplayTitle();
+		document.getElementById('vgmArtist').innerHTML = this.displayAccessor.getDisplaySubtitle();
+
+
 	},
 	colorGradient: function(cols, s) {
 		var p= (cols.length-1)*s;

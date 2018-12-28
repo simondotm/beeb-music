@@ -138,23 +138,60 @@
         }
 
         var selectedSong = null;
+        var songPlayPending = false;
         // where songName is the content URL (not the site URL)
         function myPlaySong(songName)
         {
-          if (selectedSong != null)
-          {
-            var item = document.getElementById(selectedSong);
-      		  item.removeAttribute("class", "is-selected");	            
+          var item;
+
+          if (selectedSong != null && selectedSong == songName) {
+            item = document.getElementById(selectedSong +  "/playButton");
+            if (item.classList.contains("fa-play")) {
+              playerControls.resume();
+              item.classList.remove("fa-play");
+              item.classList.add("fa-pause");
+            }else
+            {
+              if (item.classList.contains("fa-pause"))
+                playerControls.pause();
+              item.classList.remove("fa-pause");
+              item.classList.add("fa-play");
+            }
+            return;
           }
 
-          var item = document.getElementById(songName);
-          item.setAttribute("class", "is-selected");	
-          selectedSong = songName;	   
-          
+          if (selectedSong != null)
+          {
+            item = document.getElementById(selectedSong);
+            item.removeAttribute("class", "is-selected");	    
+            
+            item = document.getElementById(selectedSong +  "/playButton");
+            item.classList.remove("fa-pause");
+            item.classList.add("fa-play");
 
-          dbAddPlay(songName);
+          }
+
+          item = document.getElementById(songName);
+          item.setAttribute("class", "is-selected");	
+
+          item = document.getElementById(songName +  "/playButton");
+          item.classList.remove("fa-play");
+          item.classList.add("fa-pause");
+
+
+          selectedSong = songName;	   
 
           playerControls.playSong('{{ site.baseurl }}/' + songName);
+          songPlayPending = true;
+        }
+
+        function myRegisterSongPlay()
+        {
+          if ((selectedSong != null) && songPlayPending) {
+
+            dbAddPlay(selectedSong);
+            songPlayPending = false;
+          }
         }
 
         // Firebase keys cannot contain ., $, #, [, ], /
@@ -470,7 +507,7 @@
 
                       {% for vgm in site.data.content.content %}
                         <tr id="{{ vgm.url }}">
-                          <td>  <button class="button is-info is-rounded " onclick="myPlaySong('{{ vgm.url }}')"><strong class="fa fa-play"></strong></a></button>    </td>  
+                          <td>  <button class="button is-info is-rounded " onclick="myPlaySong('{{ vgm.url }}')"><strong id="{{ vgm.url }}/playButton" class="fa fa-play"></strong></a></button>    </td>  
                           <td>{{ vgm.length }}</td>
                           <td>{{ vgm.title }}</td>
                           <td>{{ vgm.artist }}</td>

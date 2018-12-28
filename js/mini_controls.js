@@ -113,7 +113,12 @@ BasicPlayerControls.prototype = {
 		var slider = document.getElementById("seekPos");
 		if(slider && !slider.blockUpdates) {
 			var p= ScriptNodePlayer.getInstance();	
-			slider.value = Math.round(255*p.getPlaybackPosition()/p.getMaxPlaybackPosition());
+			var offset = p.getPlaybackPosition()/p.getMaxPlaybackPosition();
+			slider.value = Math.round(255*offset);
+			// 5% in triggers a play counter
+			if (offset > 0.05) {
+				myRegisterSongPlay();
+			}
 		}	
 	},
 
@@ -264,7 +269,9 @@ BasicPlayerControls.prototype = {
 		controls.appendChild(elmt);  
 		controls.appendChild(document.createTextNode(" "));  	// spacer
 	},
-	initDomElements: function() {				
+	initDomElements: function() {	
+		
+		/*
 		var play = document.createElement("BUTTON");
 		play.id = "play";
 		play.innerHTML= " &gt;";
@@ -288,7 +295,7 @@ BasicPlayerControls.prototype = {
 		next.innerHTML= " &gt;&gt;|";
 		next.onclick = this.playNextSong.bind(this);
 		this.appendControlElement(next);  
-
+		*/
 		var gain = document.createElement("input");
 		gain.id = "gain";
 		gain.name = "gain";

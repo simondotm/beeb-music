@@ -469,13 +469,3 @@ content:
     db_id: /content/vgm/ym_009%2Evgm
     length: '02:41'
 
-  - id: 47
-    url: /content/vgm/ym_015.vgm
-    title: 'unknown tune'
-    artist: 'Loony / Admirables'
-    chip: SN76489
-    clock: 4Mhz
-    rate: 50Hz
-    db_id: /content/vgm/ym_015%2Evgm
-    length: '08:17'
-

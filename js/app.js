@@ -65,13 +65,21 @@
         ScriptNodePlayer.getInstance().play();
         songDisplay.redrawSongInfo();
     }
+    var vgmPlayerReady = false;
     function doOnPlayerReady() {
         // dont auto start
         //if (playerControls) playerControls.playNextSong();
+        vgmPlayerReady = true;
+        if (songQueued != null)
+            localPlaySong(songQueued);
     }
 
-
+    var vgmInitialised = false;
     function vgmInit() {
+
+        if (vgmInitialised)
+            return;
+
         // --------------------------- VGM music player -----------------------
         var basePath= '';		// not needed here
         ScriptNodePlayer.createInstance(new VgmBackendAdapter(), basePath, ["VGMPlay.ini", "yrw801.rom"], true,
@@ -102,31 +110,44 @@
         // dont auto play
         //playerControls.playNextSong();
 
-
-
-
-
+        vgmInitialised = true;
     }
 
     var selectedSong = null;
     var songPlayPending = false;
+    var songQueued = null;
     // where songName is the content URL (not the site URL)
     function myPlaySong(songName)
+    {
+        songQueued = songName;
+        if (!vgmInitialised)
+            vgmInit();
+
+        if (!vgmPlayerReady)
+            return;
+
+        localPlaySong(songName);
+    }
+
+        
+
+    function localPlaySong(songName)
     {
         var item;
 
         if (selectedSong != null && selectedSong == songName) {
             item = document.getElementById(selectedSong +  "/playButton");
             if (item.classList.contains("fa-play")) {
-            playerControls.resume();
-            item.classList.remove("fa-play");
-            item.classList.add("fa-pause");
+                playerControls.resume();
+                item.classList.remove("fa-play");
+                item.classList.add("fa-pause");
             }else
             {
-            if (item.classList.contains("fa-pause"))
-                playerControls.pause();
-            item.classList.remove("fa-pause");
-            item.classList.add("fa-play");
+                if (item.classList.contains("fa-pause"))
+                    playerControls.pause();
+
+                item.classList.remove("fa-pause");
+                item.classList.add("fa-play");
             }
             return;
         }
@@ -150,10 +171,11 @@
         item.classList.add("fa-pause");
 
 
-        selectedSong = songName;	   
+        selectedSong = songName;	
 
         playerControls.playSong(site_baseurl + songName);
         songPlayPending = true;
+        songQueued = null; 
     }
 
     function myRegisterSongPlay()
@@ -285,16 +307,16 @@
             if (ref != null) {
                 var uid = firebase.auth().currentUser.uid;
                 if (!ref.hasOwnProperty("likes") || !ref.hasOwnProperty("likeCount")) {
-                ref.likes = [];
-                ref.likeCount = 0;
-                }
+                    ref.likes = [];
+                    ref.likeCount = 0;
+                }   
                 
                 if (ref.likes[uid]) {
-                ref.likeCount--;
-                ref.likes[uid] = false;
+                    ref.likeCount--;
+                    ref.likes[uid] = false;
                 }else {
-                ref.likeCount++;
-                ref.likes[uid] = true;
+                    ref.likeCount++;
+                    ref.likes[uid] = true;
                 }
 
                 var o = '{ "' + db_id + '":' + ref.likes[uid] + '}';
@@ -313,30 +335,27 @@
 
     function myLogin()
     {
-    firebase.auth().signInAnonymously().catch(function(error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        //alert(errorMessage);
-        // ...
-    });          
+        firebase.auth().signInAnonymously().catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            //alert(errorMessage);
+            // ...
+        });          
     }
-
-
-
-
-  
-    document.addEventListener('DOMContentLoaded', event => {
 
 
 
 
       //-------------------------
       // main
+      // <body onload>
       //-------------------------
-      firebaseInit();
-      vgmInit();
+  
+    document.addEventListener('DOMContentLoaded', event => {
 
+      firebaseInit();
+      //vgmInit();
         
     });
 //})();

@@ -109,6 +109,11 @@ BasicPlayerControls.prototype = {
 		}
 	},
 	animate: function() {
+
+		function zeroPad(num, places) {
+			var zero = places - num.toString().length + 1;
+			return Array(+(zero > 0 && zero)).join("0") + num;
+		}		
 		// animate playback position slider
 		var slider = document.getElementById("seekPos");
 		if(slider && !slider.blockUpdates) {
@@ -118,6 +123,14 @@ BasicPlayerControls.prototype = {
 			// 5% in triggers a play counter
 			if (offset > 0.05) {
 				myRegisterSongPlay();
+			}
+
+			var time = document.getElementById("vgmTime");
+			if (time) {
+				var t = p.getPlaybackPosition() / 48000; // see VGMPlay.ini for the sample rate
+				var min = Math.floor( t / 60.0 );
+				var sec = Math.floor( t % 60.0 );
+				time.innerHTML = zeroPad(min,2) + ":" + zeroPad(sec,2);
 			}
 		}	
 	},

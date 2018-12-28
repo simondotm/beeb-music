@@ -303,7 +303,7 @@ BasicPlayerControls.prototype = {
 		gain.min = 0;
 		gain.max = 255;
 		gain.value = 255;
-		gain.onchange = function(e){ this.setVolume(gain.value/255); }.bind(this);		
+		gain.oninput = function(e){ this.setVolume(gain.value/255); }.bind(this);		
 		this.appendControlElement(gain);  
 						
 		if (this._enableSeek) {
@@ -314,9 +314,23 @@ BasicPlayerControls.prototype = {
 			seek.value = 0;
 			seek.id = "seekPos";
 			seek.name = "seekPos";
+
+			/*
+			seek.addEventListener("update", function(){
+				seek.blockUpdates= true;
+			});			
+
+			seek.addEventListener("change", function(){
+				var p= ScriptNodePlayer.getInstance();
+				this.seekPos(seek.value/255);
+				seek.blockUpdates= false;				
+			});
+*/
 			// FF: 'onchange' triggers once the final value is selected; 
 			// Chrome: already triggers while dragging; 'oninput' does not exist in IE 
 			// but supposedly has the same functionality in Chrome & FF
+
+
 			seek.oninput  = function(e){
 				if (window.chrome)
 					seek.blockUpdates= true;
@@ -329,7 +343,9 @@ BasicPlayerControls.prototype = {
 				var p= ScriptNodePlayer.getInstance();
 				this.seekPos(seek.value/255);
 				seek.blockUpdates= false;
-			}.bind(this);							
+			}.bind(this);	
+			
+			
 			this.appendControlElement(seek);  
 		}
 		if (this._enableSpeedTweak) {

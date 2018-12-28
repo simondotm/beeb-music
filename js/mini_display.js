@@ -266,8 +266,8 @@ SongDisplay.prototype = {
 		this.mozReflectLogo.style.visibility = "hidden";
 		this.mozReflectLogo.style.visibility = "visible";
 
-		document.getElementById('vgmTitle').innerHTML = this.displayAccessor.getDisplayTitle();
-		document.getElementById('vgmArtist').innerHTML = this.displayAccessor.getDisplaySubtitle();
+		document.getElementById('vgmTitle').innerHTML = this.displayAccessor.getDisplayTitle() + '&nbsp;';
+		document.getElementById('vgmArtist').innerHTML = this.displayAccessor.getDisplaySubtitle() + '&nbsp;';
 
 
 	},

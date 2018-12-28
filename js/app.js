@@ -60,6 +60,18 @@
     // link player events to "controls" and "display"
     function doOnTrackEnd(){
         //if (playerControls) playerControls.playNextSong();  
+        for (var i = 0; i < songs.length; ++i) {
+            if (songs[i] == selectedSong) {
+                if (i < songs.length-1 ) {
+                    myPlaySong(songs[i+1]);
+                    break;
+                }else {
+                    myPlaySong(songs[0]);
+                    break;
+                }
+
+            }
+        }
     }
     function doOnTrackReadyToPlay(){ 	
         ScriptNodePlayer.getInstance().play();

@@ -62,7 +62,7 @@ SongDisplay = function(displayAccessor, colors, barType, cpuLimit, doAnimate) {
 	this.barType= 0; //barType;
 	
 	this.WIDTH= 800;
-	this.HEIGHT= 100;
+	this.HEIGHT= 40;
 	
 	this.barWidth = 5;
 	this.barHeigth= 5;
